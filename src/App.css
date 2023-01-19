@@ -1,38 +1,41 @@
-.App {
-  text-align: center;
+#root #stageContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(200, 221, 200);
+    overflow: hidden;
+    cursor: crosshair;
+    fill: cornflowerblue;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.Stage-Decoration {
+    background: radial-gradient(rgb(255, 255, 255) 5%,
+            transparent 0%) -15px 5px / 60px 43px repeat,
+        30px 30px rgb(121 82 82);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.popup {
+    position: absolute;
+    /* position it on the page */
+    top: 50%;
+    /* center it vertically */
+    left: 50%;
+    /* center it horizontally */
+    transform: translate(-50%, -50%);
+    /* offset the position by half of the div's width and height */
+    background-color: white;
+    /* set the background color */
+    padding: 20px;
+    /* add some padding */
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.length {
+    width: fit-content;
+    height: auto;
+    position: absolute;
+    right: 0px;
+    top: 1.47rem;
+    background-color: yellow;
+    border: 1px dashed;
 }
