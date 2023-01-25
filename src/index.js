@@ -7,7 +7,7 @@ import PracticePurpose from './PracticePurpose';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <PracticePurpose />
+    <PracticePurpose/>
   </React.StrictMode>
 );
 

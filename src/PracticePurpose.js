@@ -7,6 +7,8 @@ const PracticePurpose = () => {
     const [isDrawing, setIsDrawing] = useState(true);
     const [selectedShape, setSelectedShape] = useState(null);
     const [lineLengths, setLineLengths] = useState([]);
+    const [x, setX] = useState("");
+    const [y, setY] = useState("");
 
 
     const handleClick = (e) => {
@@ -51,29 +53,27 @@ const PracticePurpose = () => {
         setIsDrawing(true);
     }
 
-
-
     const handleSelectShape = (shapeIndex) => {
         setSelectedShape(shapeIndex);
     }
+
+    const handleDragMove = (e) => {
+        setX(e.target.x());
+        setY(e.target.y());
+    };
+
+    const handleDragEnd = (e) => {
+        setX(e.target.x());
+        setY(e.target.y());
+    };
 
 
 
     return (
         <>
-            <div className='length'>
-                <>
-                    {lineLengths.map((length, i) => (
-                        <div key={i}>Line {i + 1} Length: {length.toFixed(2)} Sq meter</div>
-                    ))}
-                </>
-            </div>
             <button width={50} height={50} onClick={handleNewShape}>New Shape</button>
             <button width={50} height={50} onClick={handleStopDrawing}>Stop Drawing</button>
             <button width={50} height={50} onClick={handleStartDrawing}>Start Drawing</button>
-         
-
-
 
             <Stage
                 width={window.innerWidth}
@@ -83,38 +83,63 @@ const PracticePurpose = () => {
             >
                 <Layer>
                     <Group>
-                        {lines.map((line, i) => {
-                            const length = Math.sqrt(Math.pow(line.points[line.points.length - 2]
-                                - line.points[line.points.length - 4], 2) + Math.pow(line.points[line.points.length
-                                    - 1] - line.points[line.points.length - 3], 2));
-                            return (
-                                <>
-                                    <Line
-                                        key={i}
-                                        points={line.points}
-                                        stroke="black"
-                                        strokeWidth={4}
-                                        closed="true"
-                                        fillPatternRepeat
-                                        draggable="false"
-                                        lineCap="square"
-                                        lineJoin='bevel'
-                                        shadowOffsetX={2}
-                                        shadowOffsetY={2}
-                                        shadowOpacity={0.5}
-                                        fill={i === selectedShape ? 'lightpink' : 'transparent'}
-                                        onDblClick={() => handleSelectShape(i)}
-                                    />
-                                    <Text
-                                        x={line.points[line.points.length - 2]}
-                                        y={line.points[line.points.length - 1]}
-                                        text={`Shape  ${i+1} Length: ${length.toFixed(2)}`}
-                                        fontSize={15}
-                                        fill="yellow"
-                                    />
-                                </>
-                            )
-                        })}
+                        {
+                            lines.map((line, i) => {
+                                let length = 0;
+                                let x = 0;
+                                let y = 0;
+                                let prevX = 0;
+                                let prevY = 0;
+                                return (
+                                    <>
+                                        <Line
+                                            key={i}
+                                            points={line.points}
+                                            stroke="black"
+                                            strokeWidth={4}
+                                            closed="true"
+                                            draggable="true"
+                                            onDragMove={handleDragMove}
+                                            onDragEnd={handleDragEnd}
+                                            lineCap="square"
+                                            lineJoin='bevel'
+                                            shadowOffsetX={2}
+                                            shadowOffsetY={2}
+                                            shadowOpacity={0.5}
+                                            fill={i === selectedShape ? 'lightpink' : 'transparent'}
+                                            onDblClick={() => handleSelectShape(i)}
+                                        />
+
+                                        {
+                                            line.points.map((point, index) => {
+                                                if (index % 2 === 0) {
+                                                    prevX = x;
+                                                    x = point;
+                                                } else {
+                                                    prevY = y;
+                                                    y = point;
+                                                }
+                                                if (prevX && prevY) {
+                                                    length = Math.sqrt(Math.pow(x - prevX, 2) + Math.pow(y - prevY, 2));
+                                                    return (
+                                                        <Text
+                                                            x={(x + prevX) / 2}
+                                                            y={(y + prevY) / 2}
+                                                            text={`${length.toFixed(2)} Sq m`}
+                                                            fontSize={16}
+                                                            draggable="true"
+                                                            onDragMove={handleDragMove}
+                                                            onDragEnd={handleDragEnd}
+                                                            fill='yellow'
+
+                                                        />
+                                                    );
+                                                }
+                                                return null;
+                                            })}
+                                    </>
+                                );
+                            })}
                     </Group>
                 </Layer>
             </Stage>
